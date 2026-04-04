@@ -1,39 +1,76 @@
 package com.example.AssesmentZorvyn.service;
 
 import com.example.AssesmentZorvyn.dao.UserDao;
+import com.example.AssesmentZorvyn.dto.request.UserRequest;
+import com.example.AssesmentZorvyn.dto.response.UserResponse;
+import com.example.AssesmentZorvyn.enums.Role;
 import com.example.AssesmentZorvyn.models.User;
+import com.example.AssesmentZorvyn.transformation.UserTransformer;
+import com.example.AssesmentZorvyn.utility.Validation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
+    private final Validation validation;
     private final UserDao userDao;
+    private final PasswordEncoder passwordEncoder;
 
-    public User createUser(User user) {
-        user.setActive(true);
-        return userDao.save(user);
+    //Creating New User - Only Admin can Access It
+    public UserResponse createNewUser(UserRequest userRequest) {
+
+        validation.validateNewUser(userRequest);
+        String password = userRequest.getPassword();
+
+        User user = UserTransformer.userRequestToUser(userRequest);
+        user.setPassword(passwordEncoder.encode(password));
+
+        UserResponse userResponse = UserTransformer.userToUserResponse(userDao.save(user));
+        userResponse.setPassword(password);
+
+        return userResponse;
     }
 
-    public List<User> getAllUsers() {
-        return userDao.findAll();
+    //Updating Existing User - Only Admin can Access It
+    public String updateUserRole(Long userId, Role role) {
+
+        User user = validation.checkIfUserExist_byId_ReturnUser(userId);
+
+        user.setRole(role);
+        userDao.save(user);
+
+        return "Role of " + user.getName() + " has been changed";
+
     }
 
-    public User updateUser(Long id, User updatedUser) {
-        User user = userDao.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        user.setName(updatedUser.getName());
-        user.setEmail(updatedUser.getEmail());
-        user.setRole(updatedUser.getRole());
-
-        return userDao.save(user);
+    //List of All the Users
+    public List<UserResponse> getAllUsers() {
+        List<User> userList = userDao.findAllByActive();
+        List<UserResponse> userResponsesList = new ArrayList<>();
+        for(User user : userList){
+            userResponsesList.add(UserTransformer.userToUserResponse(user));
+        }
+        return userResponsesList;
     }
 
-    public void deleteUser(Long id) {
-        userDao.deleteById(id);
-    }
+
+    //Deleting user Data by Id
+    public String updateUserStatus(Long userId,Boolean active) {
+        User user = validation.checkIfUserExist_byId_ReturnUser(userId);
+
+        if (user.getActive().equals(active)) {
+            return active ? "User already active" : "User already inactive";
+        }
+
+        user.setActive(active);
+        userDao.save(user);
+
+        return active ? "User activated successfully" : "User deactivated successfully";
+     }
 }

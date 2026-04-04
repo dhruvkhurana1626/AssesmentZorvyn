@@ -4,6 +4,8 @@ import com.example.AssesmentZorvyn.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -30,4 +32,8 @@ public class User {
 
     @Column
     private Boolean active;
+
+    @Column
+    private LocalDateTime createdAt;
+
 }

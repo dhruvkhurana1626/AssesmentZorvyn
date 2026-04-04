@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
+
 @Configuration
 @RequiredArgsConstructor
 public class AdminInitializer {
@@ -27,6 +29,7 @@ public class AdminInitializer {
                         .email("SuperAdmin@Zorvyn.com")
                         .password(passwordEncoder.encode("ZoryvnBoss@123"))
                         .role(Role.ADMIN)
+                        .createdAt(LocalDateTime.now())
                         .active(true)
                         .build();
 

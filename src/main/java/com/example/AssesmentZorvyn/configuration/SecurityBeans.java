@@ -23,12 +23,20 @@ public class SecurityBeans {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**"
                         ).permitAll()
-                        .requestMatchers("/api/v1/").hasRole("ADMIN")
+
+                        // Public endpoints
+                        .requestMatchers("/auth/**").permitAll()
+
+                        // Role-based access
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/records/**").hasAnyRole("ADMIN", "ANALYST")
+
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.disable())
