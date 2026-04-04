@@ -37,6 +37,9 @@ public class FinancialRecord {
     @Column
     private String note;
 
+    @Column(nullable = false)
+    private String updatedBy;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

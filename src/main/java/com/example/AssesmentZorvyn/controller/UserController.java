@@ -37,7 +37,7 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @DeleteMapping("/{userId}")
+    @PutMapping("/status/{userId}")
     public String updateUserStatus(@PathVariable Long userId,
                                    @RequestParam Boolean active){
         return userService.updateUserStatus(userId,active);

@@ -34,8 +34,9 @@ public class SecurityBeans {
                         .requestMatchers("/auth/**").permitAll()
 
                         // Role-based access
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/records/**").hasAnyRole("ADMIN", "ANALYST")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/admin/**").hasAnyRole("ANALYST", "ADMIN")
+                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/records/**").hasAnyRole("ADMIN", "ANALYST")
 
                         .anyRequest().authenticated()
                 )

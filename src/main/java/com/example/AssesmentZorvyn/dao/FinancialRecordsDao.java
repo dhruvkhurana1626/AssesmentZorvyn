@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface FinancialRecordsDao extends JpaRepository<FinancialRecord,Long> {
+
     List<FinancialRecord> findByType(Type type);
     List<FinancialRecord> findByCategory(String category);
 

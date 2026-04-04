@@ -8,6 +8,8 @@ import com.example.AssesmentZorvyn.models.User;
 import com.example.AssesmentZorvyn.transformation.UserTransformer;
 import com.example.AssesmentZorvyn.utility.Validation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +24,16 @@ public class UserService {
     private final UserDao userDao;
     private final PasswordEncoder passwordEncoder;
 
+    // Get logged-in user
+    private User getLoggedInUser() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return validation.getUserByEmail(email);
+    }
+
     //Creating New User - Only Admin can Access It
     public UserResponse createNewUser(UserRequest userRequest) {
+
+        validation.checkifAdmin(getLoggedInUser().getEmail());
 
         validation.validateNewUser(userRequest);
         String password = userRequest.getPassword();
@@ -32,7 +42,6 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(password));
 
         UserResponse userResponse = UserTransformer.userToUserResponse(userDao.save(user));
-        userResponse.setPassword(password);
 
         return userResponse;
     }
@@ -40,28 +49,35 @@ public class UserService {
     //Updating Existing User - Only Admin can Access It
     public String updateUserRole(Long userId, Role role) {
 
+        validation.checkifAdmin(getLoggedInUser().getEmail());
+
         User user = validation.checkIfUserExist_byId_ReturnUser(userId);
 
         user.setRole(role);
         userDao.save(user);
 
-        return "Role of " + user.getName() + " has been changed";
+        return "Role of " + user.getName() + " has been changed to " + role ;
 
     }
 
     //List of All the Users
     public List<UserResponse> getAllUsers() {
-        List<User> userList = userDao.findAllByActive();
+
+        List<User> userList = userDao.findAll();
         List<UserResponse> userResponsesList = new ArrayList<>();
         for(User user : userList){
             userResponsesList.add(UserTransformer.userToUserResponse(user));
         }
         return userResponsesList;
+
     }
 
 
-    //Deleting user Data by Id
+    //Updating User status
     public String updateUserStatus(Long userId,Boolean active) {
+
+        validation.checkifAdmin(getLoggedInUser().getEmail());
+
         User user = validation.checkIfUserExist_byId_ReturnUser(userId);
 
         if (user.getActive().equals(active)) {
