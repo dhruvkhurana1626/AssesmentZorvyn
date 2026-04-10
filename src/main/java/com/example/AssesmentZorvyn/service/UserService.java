@@ -4,6 +4,7 @@ import com.example.AssesmentZorvyn.dao.UserDao;
 import com.example.AssesmentZorvyn.dto.request.UserRequest;
 import com.example.AssesmentZorvyn.dto.response.UserResponse;
 import com.example.AssesmentZorvyn.enums.Role;
+import com.example.AssesmentZorvyn.exception.InvalidRequestException;
 import com.example.AssesmentZorvyn.models.User;
 import com.example.AssesmentZorvyn.transformation.UserTransformer;
 import com.example.AssesmentZorvyn.utility.Validation;
@@ -52,6 +53,10 @@ public class UserService {
         validation.checkifAdmin(getLoggedInUser().getEmail());
 
         User user = validation.checkIfUserExist_byId_ReturnUser(userId);
+
+        if(user.getEmail().equals("SuperAdmin@Zorvyn.com")){
+            throw new InvalidRequestException("You are not authorized to make this changes");
+        }
 
         user.setRole(role);
         userDao.save(user);

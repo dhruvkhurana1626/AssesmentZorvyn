@@ -19,12 +19,14 @@ public class UserController {
 
     private final UserService userService;
 
+    //create new user
     @PostMapping
     public ResponseEntity createNewUser(@RequestBody UserRequest userRequest){
         UserResponse userResponse = userService.createNewUser(userRequest);
         return ResponseEntity.ok(userResponse);
     }
 
+    //update user Role
     @PutMapping("/{userId}")
     public ResponseEntity<?> updateUserRole(@PathVariable Long userId,
                                             @RequestParam Role role){
@@ -32,11 +34,13 @@ public class UserController {
         return ResponseEntity.ok(updateMsg);
     }
 
+    //get all user
     @GetMapping
     public List<UserResponse> getAllUsers(){
         return userService.getAllUsers();
     }
 
+    //update user status - active or not active
     @PutMapping("/status/{userId}")
     public String updateUserStatus(@PathVariable Long userId,
                                    @RequestParam Boolean active){

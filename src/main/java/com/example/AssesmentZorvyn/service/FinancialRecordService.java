@@ -91,10 +91,10 @@ public class FinancialRecordService {
 
         FinancialRecord record = validation.getFinancialRecordById(id);
 
-        record.setAmount(request.getAmount());
-        record.setCategory(request.getCategory());
-        record.setType(request.getType());
-        record.setNote(request.getNote());
+        if(request.getAmount()!=null)record.setAmount(request.getAmount());
+        if(request.getCategory()!=null)record.setCategory(request.getCategory());
+        if(request.getType()!=null)record.setType(request.getType());
+        if(request.getNote()!=null)record.setNote(request.getNote());
 
         FinancialRecord savedRecord = financialRecordsDao.save(record);
 

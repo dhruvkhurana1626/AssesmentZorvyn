@@ -20,4 +20,8 @@ public interface FinancialRecordsDao extends JpaRepository<FinancialRecord,Long>
     //category wise
     @Query("SELECT r.category, SUM(r.amount) FROM FinancialRecord r GROUP BY r.category")
     List<Object[]> getCategorySummary();
+
+    //all records in date wise order - from - new first
+    @Query("SELECT f FROM FinancialRecord f ORDER BY f.date")
+    List<FinancialRecord> findAllInSortedOrder();
 }
