@@ -1,5 +1,6 @@
 package com.example.AssesmentZorvyn.dto.request;
 
+import com.example.AssesmentZorvyn.enums.Category;
 import com.example.AssesmentZorvyn.enums.Type;
 import com.example.AssesmentZorvyn.annotations.MinWords;
 import jakarta.validation.constraints.NotBlank;
@@ -23,7 +24,7 @@ public class FinancialRecordRequest {
     private Type type;
 
     @NotBlank
-    private String category;
+    private Category category;
 
     @NotBlank
     @MinWords(value = 10, message = "Content must have at least 10 words")

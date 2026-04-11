@@ -70,8 +70,8 @@ public class FinancialRecordService {
 
         User user = getLoggedInUser();
 
-        if (user.getRole()==null || user.getRole() != Role.ADMIN) {
-            throw new RuntimeException("You Dont have the Authority to make changes");
+        if (user.getRole()==null || user.getRole() == Role.VIEWER) {
+            throw new BusinessException("You Dont have the Authority to make changes");
         }
 
         FinancialRecord financialRecord = validation.getFinancialRecordById(id);
@@ -112,7 +112,7 @@ public class FinancialRecordService {
 
     public @Nullable Object getByCategory(String category) {
 
-        return financialRecordsDao.findByCategory(category)
+        return financialRecordsDao.findByNoteContainingIgnoreCase(category)
                 .stream()
                 .map(FinancialRecordTransformer::financialRecordToFinancialRecordResponse)
                 .collect(Collectors.toList());

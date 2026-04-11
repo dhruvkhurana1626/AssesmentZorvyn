@@ -1,5 +1,6 @@
 package com.example.AssesmentZorvyn.models;
 
+import com.example.AssesmentZorvyn.enums.Category;
 import com.example.AssesmentZorvyn.enums.Type;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,7 +28,8 @@ public class FinancialRecord {
     private Type type;
 
     @Column
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
     @Column
     private LocalDate date;

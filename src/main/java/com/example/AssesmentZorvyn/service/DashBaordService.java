@@ -9,6 +9,9 @@ import com.example.AssesmentZorvyn.models.FinancialRecord;
 import com.example.AssesmentZorvyn.transformation.DashBaordTransformer;
 import com.example.AssesmentZorvyn.transformation.FinancialRecordTransformer;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,7 +33,9 @@ public class DashBaordService {
 
         double balance  = totalIncome - totalExpense;
 
-        List<FinancialRecord> financialRecordList = financialRecordsDao.findAllInSortedOrder();
+        Pageable pageable = PageRequest.of(0,10, Sort.by("date").descending());
+
+        List<FinancialRecord> financialRecordList = (List<FinancialRecord>) financialRecordsDao.findAll(pageable);
         List<FinancialRecordResponse> financialRecordResponses = new ArrayList<>();
         for(FinancialRecord financialRecord : financialRecordList){
             financialRecordResponses
