@@ -1,7 +1,10 @@
 package com.example.AssesmentZorvyn.dao;
 
+import com.example.AssesmentZorvyn.enums.Category;
 import com.example.AssesmentZorvyn.enums.Type;
 import com.example.AssesmentZorvyn.models.FinancialRecord;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -27,4 +30,10 @@ public interface FinancialRecordsDao extends JpaRepository<FinancialRecord,Long>
     List<FinancialRecord> findAllInSortedOrder();
 
     List<FinancialRecord> findByNoteContainingIgnoreCase(String category);
+
+    Double sumByCategoryWhereTypeExpense(Category category);
+
+    Double sumByCategoryWhereTypeIncome(Category category);
+
+    Page<FinancialRecord> findAllByCategory(Category category, Pageable pageable);
 }

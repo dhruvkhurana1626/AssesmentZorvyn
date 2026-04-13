@@ -1,9 +1,11 @@
 package com.example.AssesmentZorvyn.controller;
 
+import com.example.AssesmentZorvyn.enums.Category;
 import com.example.AssesmentZorvyn.service.DashBaordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,5 +21,14 @@ public class DashBaordController {
     public ResponseEntity getOverView(){
         return ResponseEntity.ok(dashBaordService.getOverView());
     }
+
+    //Categorised Summary
+    @GetMapping("/overview/category-summary/{category}")
+    public ResponseEntity getCategorySummary(@PathVariable Category category){
+        return ResponseEntity.ok(dashBaordService.getCategorySummary(category));
+    }
+
+    //Monthly OverView
+    @GetMapping("/overview/category-summary/{category}")
 
 }
